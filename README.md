@@ -9,6 +9,7 @@ A minimalist shell in C
 ```bash
 make
 ```
+![minishell-compiling](https://github.com/user-attachments/assets/1d8b36e1-cc64-4e0f-84f7-5005f951d5ba)
 
 ## How to use
 
