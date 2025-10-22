@@ -61,22 +61,14 @@ void	sort_env_ascii(char **arr)
 
 char	*escape_export_value(const char *value)
 {
-	size_t	i;
-	size_t	extra;
-	char	*out;
-	size_t	k;
+	size_t  i;
+	size_t  k;
+	char    *out;
 
 	if (!value)
 		return (ft_strdup(""));
-	extra = 0;
-	i = 0;
-	while (value[i])
-	{
-		if (value[i] == '"' || value[i] == '\\')
-			extra++;
-		i++;
-	}
-	out = (char *)malloc(i + extra + 1);
+	i = ft_strlen(value);
+	out = (char *)malloc((i * 2) + 1);
 	if (!out)
 		return (NULL);
 	k = 0;
