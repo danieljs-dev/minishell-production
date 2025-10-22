@@ -61,9 +61,9 @@ void	sort_env_ascii(char **arr)
 
 char	*escape_export_value(const char *value)
 {
-	size_t  i;
-	size_t  k;
-	char    *out;
+	size_t	i;
+	size_t	k;
+	char	*out;
 
 	if (!value)
 		return (ft_strdup(""));
