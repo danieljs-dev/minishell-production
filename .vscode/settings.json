@@ -1,8 +1,0 @@
-{
-	"files.associations": {
-		"libft.h": "c"
-	},
-	"[c]": {
-		"editor.defaultFormatter": "keyhr.42-c-format"
-	}
-}
