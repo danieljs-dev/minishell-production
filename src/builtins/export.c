@@ -6,7 +6,7 @@
 /*   By: dajesus- <dajesus-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/14 23:03:20 by dajesus-          #+#    #+#             */
-/*   Updated: 2025/10/21 18:39:19 by dajesus-         ###   ########.fr       */
+/*   Updated: 2025/10/21 20:40:18 by dajesus-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,8 @@
 
 static int	export_with_value(char *name, char *value, t_shell *shell)
 {
-	int		n;
 	char	*new_env;
 	char	*temp1;
-	char	**resized;
 
 	temp1 = ft_strjoin(name, "=");
 	new_env = ft_strjoin(temp1, value);
@@ -25,19 +23,11 @@ static int	export_with_value(char *name, char *value, t_shell *shell)
 	if (!new_env)
 		return (0);
 	builtin_unset((char *[]){"unset", name, NULL}, shell);
-	n = array_size(shell->env);
-	resized = (char **)malloc(sizeof(char *) * (n + 2));
-	if (!resized)
+	if (env_append(shell, new_env) != 0)
 	{
 		free(new_env);
 		return (1);
 	}
-	while (n-- > 0)
-		resized[n] = shell->env[n];
-	resized[array_size(shell->env)] = new_env;
-	resized[array_size(shell->env) + 1] = NULL;
-	free(shell->env);
-	shell->env = resized;
 	return (0);
 }
 
@@ -91,7 +81,7 @@ int	builtin_export(char **args, t_shell *shell)
 	int	i;
 
 	if (!args[1])
-		return (builtin_env(shell));
+		return (print_export_list(shell));
 	i = 1;
 	while (args[i])
 	{

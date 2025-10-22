@@ -90,6 +90,8 @@ SRCS = \
 	$(SRC_DIR)/builtins/cd.c \
 	$(SRC_DIR)/builtins/exit.c \
 	$(SRC_DIR)/builtins/export.c \
+	$(SRC_DIR)/builtins/export_utils.c \
+	$(SRC_DIR)/builtins/export_print.c \
 	$(SRC_DIR)/builtins/unset.c \
 	$(SRC_DIR)/execution/dispatch.c \
 	$(SRC_DIR)/execution/path.c \
@@ -104,7 +106,8 @@ SRCS = \
 	$(SRC_DIR)/redirections/heredoc_utils.c \
 	$(SRC_DIR)/redirections/redirections_side.c \
 	$(SRC_DIR)/redirections/heredoc_side.c \
-	$(SRC_DIR)/redirections/heredoc.c
+	$(SRC_DIR)/redirections/heredoc.c \
+	$(SRC_DIR)/redirections/heredoc_writer.c
 
 OBJS = $(SRCS:.c=.o)
 

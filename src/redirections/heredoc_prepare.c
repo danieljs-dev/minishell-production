@@ -6,7 +6,7 @@
 /*   By: dajesus- <dajesus-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/18 01:55:00 by dajesus-          #+#    #+#             */
-/*   Updated: 2025/10/21 18:53:32 by dajesus-         ###   ########.fr       */
+/*   Updated: 2025/10/21 21:01:30 by dajesus-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,27 +26,21 @@ static char	*ms_tmpname(void)
 	return (name);
 }
 
-static int	hd_child_write(const char *path, const char *delim)
+static int	hd_finalize_parent(t_redir *r, char *tmp, int status)
 {
-	int		fd;
-	char	*content;
+	int	code;
 
-	signal(SIGINT, SIG_DFL);
-	signal(SIGQUIT, SIG_IGN);
-	content = read_heredoc_lines((char *)delim);
-	if (!content)
-		return (130);
-	fd = open(path, O_WRONLY | O_CREAT | O_TRUNC, 0600);
-	if (fd == -1)
-		return (free(content), 1);
-	if (*content)
-		write(fd, content, ft_strlen(content));
-	close(fd);
-	free(content);
+	restore_parent_interactive_signals();
+	code = hd_status_to_code(status, tmp);
+	if (code != 0)
+		return (code);
+	free(r->file);
+	r->file = tmp;
+	r->type = REDIR_IN;
 	return (0);
 }
 
-static int	run_one_heredoc(t_redir *r)
+static int	run_one_heredoc(t_redir *r, t_shell *shell)
 {
 	char	*tmp;
 	pid_t	pid;
@@ -58,24 +52,21 @@ static int	run_one_heredoc(t_redir *r)
 	set_parent_exec_signals();
 	pid = fork();
 	if (pid == 0)
-		exit(hd_child_write(tmp, r->file));
+	{
+		hd_setup_child_signals();
+		exit(hd_child_write(tmp, r->file, (r->quote_type == '\0'), shell));
+	}
 	if (pid < 0)
-		return (restore_parent_interactive_signals(), free(tmp), 1);
-	while (waitpid(pid, &status, 0) == -1 && errno == EINTR)
-		;
-	restore_parent_interactive_signals();
-	if ((WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
-		|| (WIFEXITED(status) && WEXITSTATUS(status) == 130))
-		return (unlink(tmp), free(tmp), 130);
-	if (WIFEXITED(status) && WEXITSTATUS(status) != 0)
-		return (unlink(tmp), free(tmp), 1);
-	free(r->file);
-	r->file = tmp;
-	r->type = REDIR_IN;
-	return (0);
+	{
+		restore_parent_interactive_signals();
+		free(tmp);
+		return (1);
+	}
+	hd_wait_child(pid, &status);
+	return (hd_finalize_parent(r, tmp, status));
 }
 
-static int	prepare_cmd_heredocs(t_redir *r)
+static int	prepare_cmd_heredocs(t_redir *r, t_shell *shell)
 {
 	int	rc;
 
@@ -83,7 +74,7 @@ static int	prepare_cmd_heredocs(t_redir *r)
 	{
 		if (r->type == REDIR_HEREDOC)
 		{
-			rc = run_one_heredoc(r);
+			rc = run_one_heredoc(r, shell);
 			if (rc != 0)
 				return (rc);
 		}
@@ -97,11 +88,10 @@ int	prepare_heredocs(t_command *cmds, t_shell *shell)
 	t_command	*c;
 	int			code;
 
-	(void)shell;
 	c = cmds;
 	while (c)
 	{
-		code = prepare_cmd_heredocs(c->redirs);
+		code = prepare_cmd_heredocs(c->redirs, shell);
 		if (code != 0)
 			return (code);
 		c = c->next;

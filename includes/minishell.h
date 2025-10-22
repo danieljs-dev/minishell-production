@@ -6,7 +6,7 @@
 /*   By: dajesus- <dajesus-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 03:58:52 by dajesus-          #+#    #+#             */
-/*   Updated: 2025/10/21 18:38:38 by dajesus-         ###   ########.fr       */
+/*   Updated: 2025/10/21 21:01:30 by dajesus-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ typedef struct s_redir
 {
 	t_redir_type		type;
 	char				*file;
+	char				quote_type;
 	struct s_redir		*next;
 }						t_redir;
 
@@ -124,7 +125,8 @@ char					**build_args(t_token *tokens, int count);
 t_redir					*build_redirs(t_token *tokens);
 int						is_redir_token(t_token_type type);
 void					free_commands(t_command **commands);
-t_redir					*create_redir(t_redir_type type, char *file);
+t_redir					*create_redir(t_redir_type type, char *file,
+							char quote_type);
 void					add_redir(t_redir **redirs, t_redir *new_redir);
 void					free_redirs(t_redir **redirs);
 t_command				*create_command(char **args, t_redir *redirs);
@@ -151,6 +153,11 @@ int						builtin_env(t_shell *shell);
 int						builtin_exit(char **args, t_shell *shell);
 int						is_builtin(char *cmd);
 int						is_valid_identifier(char *name);
+int						print_export_list(t_shell *shell);
+int						cmp_env_keys_ascii(const char *a, const char *b);
+void					sort_env_ascii(char **arr);
+char					*escape_export_value(const char *value);
+int						env_append(t_shell *shell, char *new_env);
 
 // execution
 int						execute_command(t_command *cmd, t_shell *shell);
@@ -180,7 +187,11 @@ int						redirections_side_effects_only(t_redir *redirs);
 int						prepare_heredocs(t_command *cmds, t_shell *shell);
 void					cleanup_heredocs(t_command *cmds);
 int						heredoc_consume_only(char *delimiter);
-// int     heredoc_consume_only(char *delimiter);
+int						hd_child_write(const char *path, const char *delim,
+							int do_expand, t_shell *shell);
+void					hd_setup_child_signals(void);
+int						hd_wait_child(pid_t pid, int *status);
+int						hd_status_to_code(int status, char *tmp);
 
 // signals
 void					setup_signals(void);

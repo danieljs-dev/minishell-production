@@ -6,7 +6,7 @@
 /*   By: dajesus- <dajesus-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/14 23:05:12 by dajesus-          #+#    #+#             */
-/*   Updated: 2025/10/21 18:53:17 by dajesus-         ###   ########.fr       */
+/*   Updated: 2025/10/21 20:40:18 by dajesus-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,12 +38,13 @@ static void	handle_one_redir(t_token **tokens, t_redir **redirs)
 	type = redir_type_from_token((*tokens)->type);
 	*tokens = (*tokens)->next;
 	if (*tokens && (*tokens)->type == TOKEN_WORD)
-		node = create_redir(type, ft_strdup((*tokens)->value));
+		node = create_redir(type, ft_strdup((*tokens)->value),
+				(*tokens)->quote_type);
 	else
 	{
 		ft_putendl_fd("minishell: syntax error near unexpected token `newline'",
 			2);
-		node = create_redir(type, ft_strdup(""));
+		node = create_redir(type, ft_strdup(""), '\0');
 	}
 	if (node)
 		add_redir(redirs, node);
