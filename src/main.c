@@ -17,9 +17,21 @@ int	g_signal = 0;
 int	main(int argc, char **argv, char **env)
 {
 	t_shell	shell;
+	int		fd;
 
-	(void)argc;
-	(void)argv;
+	if (argc > 1)
+	{
+		fd = open(argv[1], O_RDONLY);
+		if (fd == -1)
+		{
+			ft_putstr_fd("minishell: ", 2);
+			ft_putstr_fd(argv[1], 2);
+			ft_putstr_fd(": ", 2);
+			ft_putendl_fd(strerror(errno), 2);
+			return (127);
+		}
+		close(fd);
+	}
 	init_shell(&shell, env);
 	setup_signals();
 	run_shell(&shell);
