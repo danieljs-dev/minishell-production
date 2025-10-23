@@ -60,27 +60,27 @@ static void	process_input(char *input, t_shell *shell)
 
 static int	read_line_and_prepare(char **out_line)
 {
-    char	*input;
-    char	*line;
+	char	*input;
+	char	*line;
 
-    input = readline("minishell$ ");
-    if (!input)
-    {
-        ft_putendl_fd("exit", 1);
-        clear_history();
-        return (-1);
-    }
-    line = ms_complete_quotes(input);
-    free(input);
-    if (!line)
-        return (0);
-    if (ft_strlen(line) == 0)
-    {
-        free(line);
-        return (0);
-    }
-    *out_line = line;
-    return (1);
+	input = readline("minishell$ ");
+	if (!input)
+	{
+		ft_putendl_fd("exit", 1);
+		clear_history();
+		return (-1);
+	}
+	line = ms_complete_quotes(input);
+	free(input);
+	if (!line)
+		return (0);
+	if (ft_strlen(line) == 0)
+	{
+		free(line);
+		return (0);
+	}
+	*out_line = line;
+	return (1);
 }
 
 void	run_shell(t_shell *shell)
