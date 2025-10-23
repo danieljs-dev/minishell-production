@@ -46,6 +46,11 @@ static void	exit_numeric_error(char **args, t_shell *shell)
 	ft_putendl_fd(": numeric argument required", 2);
 	if (args)
 		free_array(args);
+	if (shell->current_input)
+	{
+		free(shell->current_input);
+		shell->current_input = NULL;
+	}
 	cleanup_shell(shell);
 	clear_history();
 	exit(2);
