@@ -27,6 +27,19 @@ void	setup_child_pipes(int prev_pipe, int *pipe_fd, t_command *commands)
 	}
 }
 
+static void	child_exit_cleanup(t_shell *shell, char **args, int code)
+{
+	if (args)
+		free_array(args);
+	if (shell->current_input)
+	{
+		free(shell->current_input);
+		shell->current_input = NULL;
+	}
+	cleanup_shell(shell);
+	exit(code);
+}
+
 void	child_dispatch_and_exit(t_command *cmd, t_shell *shell)
 {
 	char	**expanded_args;
@@ -36,19 +49,16 @@ void	child_dispatch_and_exit(t_command *cmd, t_shell *shell)
 	signal(SIGQUIT, SIG_DFL);
 	expanded_args = expand_args(cmd->args, shell);
 	if (!expanded_args)
-		exit(1);
+		child_exit_cleanup(shell, NULL, 1);
 	if (expanded_args[0] && is_builtin(expanded_args[0]))
 	{
 		code = execute_builtin(expanded_args, shell);
-		free_array(expanded_args);
-		exit(code);
+		child_exit_cleanup(shell, expanded_args, code);
 	}
 	if (expanded_args[0])
 	{
 		code = execute_external(expanded_args, shell);
-		free_array(expanded_args);
-		exit(code);
+		child_exit_cleanup(shell, expanded_args, code);
 	}
-	free_array(expanded_args);
-	exit(0);
+	child_exit_cleanup(shell, expanded_args, 0);
 }

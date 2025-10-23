@@ -38,9 +38,21 @@ static void	handle_child_process(t_command *cmd, char **expanded_args,
 		else
 			exit_code = execute_external(expanded_args, shell);
 		free_array(expanded_args);
+		if (shell->current_input)
+		{
+			free(shell->current_input);
+			shell->current_input = NULL;
+		}
+		cleanup_shell(shell);
 		exit(exit_code);
 	}
 	free_array(expanded_args);
+	if (shell->current_input)
+	{
+		free(shell->current_input);
+		shell->current_input = NULL;
+	}
+	cleanup_shell(shell);
 	exit(1);
 }
 
