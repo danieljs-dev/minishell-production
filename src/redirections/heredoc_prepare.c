@@ -40,11 +40,23 @@ static int	hd_finalize_parent(t_redir *r, char *tmp, int status)
 	return (0);
 }
 
+static void	hd_child_exit_cleanup(t_shell *shell, int code)
+{
+	if (shell->current_input)
+	{
+		free(shell->current_input);
+		shell->current_input = NULL;
+	}
+	cleanup_shell(shell);
+	exit(code);
+}
+
 static int	run_one_heredoc(t_redir *r, t_shell *shell)
 {
 	char	*tmp;
 	pid_t	pid;
 	int		status;
+	int		rc;
 
 	tmp = ms_tmpname();
 	if (!tmp)
@@ -54,7 +66,9 @@ static int	run_one_heredoc(t_redir *r, t_shell *shell)
 	if (pid == 0)
 	{
 		hd_setup_child_signals();
-		exit(hd_child_write(tmp, r->file, (r->quote_type == '\0'), shell));
+		rc = hd_child_write(tmp, r->file, (r->quote_type == '\0'), shell);
+		free(tmp);
+		hd_child_exit_cleanup(shell, rc);
 	}
 	if (pid < 0)
 	{

@@ -45,7 +45,7 @@ static int	se_in(const char *f)
 	return (0);
 }
 
-int	redirections_side_effects_only(t_redir *r)
+int	redirections_side_effects_only(t_redir *r, t_shell *shell)
 {
 	int	code;
 
@@ -59,7 +59,7 @@ int	redirections_side_effects_only(t_redir *r)
 			return (1);
 		else if (r->type == REDIR_HEREDOC)
 		{
-			code = heredoc_consume_only(r->file);
+			code = heredoc_consume_only(r->file, shell);
 			if (code != 0)
 				return (code);
 		}

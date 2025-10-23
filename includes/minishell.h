@@ -184,10 +184,11 @@ int						run_builtin_in_parent(char **expanded_args,
 // redirections
 int						setup_redirections(t_redir *redirs);
 char					*read_heredoc_lines(char *delimiter);
-int						redirections_side_effects_only(t_redir *redirs);
+int						redirections_side_effects_only(t_redir *redirs,
+							t_shell *shell);
 int						prepare_heredocs(t_command *cmds, t_shell *shell);
 void					cleanup_heredocs(t_command *cmds);
-int						heredoc_consume_only(char *delimiter);
+int						heredoc_consume_only(char *delimiter, t_shell *shell);
 int						hd_child_write(const char *path, const char *delim,
 							int do_expand, t_shell *shell);
 void					hd_setup_child_signals(void);

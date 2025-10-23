@@ -12,7 +12,7 @@
 
 #include "../../includes/minishell.h"
 
-static void	heredoc_child(const char *delimiter)
+static void	heredoc_child(const char *delimiter, t_shell *shell)
 {
 	char	*content;
 
@@ -20,12 +20,26 @@ static void	heredoc_child(const char *delimiter)
 	signal(SIGQUIT, SIG_IGN);
 	content = read_heredoc_lines((char *)delimiter);
 	if (!content)
+	{
+		if (shell->current_input)
+		{
+			free(shell->current_input);
+			shell->current_input = NULL;
+		}
+		cleanup_shell(shell);
 		exit(130);
+	}
 	free(content);
+	if (shell->current_input)
+	{
+		free(shell->current_input);
+		shell->current_input = NULL;
+	}
+	cleanup_shell(shell);
 	exit(0);
 }
 
-int	heredoc_consume_only(char *delimiter)
+int	heredoc_consume_only(char *delimiter, t_shell *shell)
 {
 	pid_t	pid;
 	int		status;
@@ -33,7 +47,7 @@ int	heredoc_consume_only(char *delimiter)
 	set_parent_exec_signals();
 	pid = fork();
 	if (pid == 0)
-		heredoc_child(delimiter);
+		heredoc_child(delimiter, shell);
 	if (pid < 0)
 		return (restore_parent_interactive_signals(), 1);
 	while (waitpid(pid, &status, 0) == -1 && errno == EINTR)

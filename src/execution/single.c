@@ -31,7 +31,7 @@ int	execute_single_command(t_command *cmd, t_shell *shell)
 		return ((shell->exit_status = 2), 2);
 	if (!cmd->args || !cmd->args[0])
 	{
-		if (redirections_side_effects_only(cmd->redirs) == 0)
+		if (redirections_side_effects_only(cmd->redirs, shell) == 0)
 			return ((shell->exit_status = 0), 0);
 		return (1);
 	}
