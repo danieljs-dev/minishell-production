@@ -47,16 +47,16 @@ end_build:
 
 $(NAME): $(OBJS)
 	@echo "$(shell date +%H:%M:%S) ${LIGHT_BLUE}	Archiving into $(NAME)...${RESET}"
-	@ar rcs $(NAME) $(OBJS) || (echo "$(shell date +%H:%M:%S) ${RED}🔴 Archiving failed.${RESET}"; exit 1)
+	@ar rcs $(NAME) $(OBJS)
 	@echo "$(shell date +%H:%M:%S) ${LIGHT_BLUE}	Building ft_printf...${RESET}"
-	@$(MAKE) -s -C $(PRINTF_DIR) --no-print-directory || (echo "$(shell date +%H:%M:%S) ${RED}🔴 ft_printf build failed.${RESET}"; exit 1)
+	@$(MAKE) -s -C $(PRINTF_DIR) --no-print-directory
 	@cp $(PRINTF_LIB) .
 	@ar -x libftprintf.a && ar rcs $(NAME) *.o
 	@rm -f libftprintf.a
 
 %.o: %.c
 	@echo "$(shell date +%H:%M:%S) ${BLUE}	Compiling $< ...${RESET}"
-	@$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $@ || (echo "$(shell date +%H:%M:%S) ${RED}🔴 Compile failed on $<.${RESET}"; exit 1)
+	@$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $@
 
 clean:
 	@echo "▶ Run Clean"

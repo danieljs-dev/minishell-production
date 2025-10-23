@@ -32,12 +32,12 @@ end_build:
 $(NAME): $(OBJS)
 	@echo "$(shell date +%H:%M:%S) ${LIGHT_BLUE}	Building $(NAME) from objects...${RESET}"
 	@echo "$(shell date +%H:%M:%S) ${LIGHT_BLUE}	Using libft from $(LIBFT)...${RESET}"
-	@cp $(LIBFT) $(NAME) || (echo "$(shell date +%H:%M:%S) ${RED}🔴 Failed to copy libft.a.${RESET}"; exit 1)
-	@ar rcs $(NAME) $(OBJS) || (echo "$(shell date +%H:%M:%S) ${RED}🔴 Archiving failed.${RESET}"; exit 1)
+	@cp $(LIBFT) $(NAME)
+	@ar rcs $(NAME) $(OBJS)
 
 %.o: %.c
 	@echo "$(shell date +%H:%M:%S) ${BLUE}	Compiling $< ...${RESET}"
-	@$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $@ || (echo "$(shell date +%H:%M:%S) ${RED}🔴 Compile failed on $<.${RESET}"; exit 1)
+	@$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $@
 
 clean:
 	@echo "▶ Run Clean"
