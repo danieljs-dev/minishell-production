@@ -76,6 +76,7 @@ typedef struct s_command
 typedef struct s_shell
 {
 	char				**env;
+	char				*current_input;
 	int					exit_status;
 	t_token				*tokens;
 	t_command			*commands;

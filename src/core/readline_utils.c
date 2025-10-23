@@ -64,7 +64,6 @@ char	*ms_complete_quotes(char *first_line)
 	char	*more;
 
 	acc = ft_strdup(first_line);
-	free(first_line);
 	if (!acc)
 		return (NULL);
 	while (!quotes_balanced(acc))

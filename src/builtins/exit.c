@@ -70,6 +70,11 @@ int	builtin_exit(char **args, t_shell *shell)
 	exit_code = compute_exit_code(args, shell);
 	if (args)
 		free_array(args);
+	if (shell->current_input)
+	{
+		free(shell->current_input);
+		shell->current_input = NULL;
+	}
 	cleanup_shell(shell);
 	clear_history();
 	exit(exit_code);
