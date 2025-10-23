@@ -31,29 +31,13 @@ static void	handle_child_process(t_command *cmd, char **expanded_args,
 
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
-	if (setup_redirections(cmd->redirs) == 0)
-	{
-		if (expanded_args[0] && is_builtin(expanded_args[0]))
-			exit_code = execute_builtin(expanded_args, shell);
-		else
-			exit_code = execute_external(expanded_args, shell);
-		free_array(expanded_args);
-		if (shell->current_input)
-		{
-			free(shell->current_input);
-			shell->current_input = NULL;
-		}
-		cleanup_shell(shell);
-		exit(exit_code);
-	}
-	free_array(expanded_args);
-	if (shell->current_input)
-	{
-		free(shell->current_input);
-		shell->current_input = NULL;
-	}
-	cleanup_shell(shell);
-	exit(1);
+	if (setup_redirections(cmd->redirs) != 0)
+		child_exit_cleanup(shell, expanded_args, 1);
+	if (expanded_args[0] && is_builtin(expanded_args[0]))
+		exit_code = execute_builtin(expanded_args, shell);
+	else
+		exit_code = execute_external(expanded_args, shell);
+	child_exit_cleanup(shell, expanded_args, exit_code);
 }
 
 static int	handle_fork_and_wait(t_command *cmd, char **expanded_args,

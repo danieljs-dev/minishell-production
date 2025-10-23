@@ -37,6 +37,17 @@ int	hd_status_to_code(int status, char *tmp)
 	return (0);
 }
 
+void	hd_child_exit_cleanup(t_shell *shell, int code)
+{
+	if (shell->current_input)
+	{
+		free(shell->current_input);
+		shell->current_input = NULL;
+	}
+	cleanup_shell(shell);
+	exit(code);
+}
+
 void	cleanup_heredocs(t_command *cmds)
 {
 	t_command	*c;

@@ -40,17 +40,6 @@ static int	hd_finalize_parent(t_redir *r, char *tmp, int status)
 	return (0);
 }
 
-static void	hd_child_exit_cleanup(t_shell *shell, int code)
-{
-	if (shell->current_input)
-	{
-		free(shell->current_input);
-		shell->current_input = NULL;
-	}
-	cleanup_shell(shell);
-	exit(code);
-}
-
 static int	run_one_heredoc(t_redir *r, t_shell *shell)
 {
 	char	*tmp;

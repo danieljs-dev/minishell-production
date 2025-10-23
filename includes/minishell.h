@@ -177,6 +177,8 @@ int						prepare_single_heredoc(t_command *cmd, t_shell *shell);
 void					setup_child_pipes(int prev_pipe, int *pipe_fd,
 							t_command *commands);
 void					child_dispatch_and_exit(t_command *cmd, t_shell *shell);
+void					child_exit_cleanup(t_shell *shell, char **args,
+							int code);
 /* run builtin in parent (handles redirs) */
 int						run_builtin_in_parent(char **expanded_args,
 							t_command *cmd, t_shell *shell);
@@ -187,6 +189,7 @@ char					*read_heredoc_lines(char *delimiter);
 int						redirections_side_effects_only(t_redir *redirs,
 							t_shell *shell);
 int						prepare_heredocs(t_command *cmds, t_shell *shell);
+void					hd_child_exit_cleanup(t_shell *shell, int code);
 void					cleanup_heredocs(t_command *cmds);
 int						heredoc_consume_only(char *delimiter, t_shell *shell);
 int						hd_child_write(const char *path, const char *delim,

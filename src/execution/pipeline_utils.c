@@ -27,7 +27,7 @@ void	setup_child_pipes(int prev_pipe, int *pipe_fd, t_command *commands)
 	}
 }
 
-static void	child_exit_cleanup(t_shell *shell, char **args, int code)
+void	child_exit_cleanup(t_shell *shell, char **args, int code)
 {
 	if (args)
 		free_array(args);
