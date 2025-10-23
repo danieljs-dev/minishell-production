@@ -91,6 +91,7 @@ SRCS = \
 	$(SRC_DIR)/builtins/exit.c \
 	$(SRC_DIR)/builtins/export.c \
 	$(SRC_DIR)/builtins/export_utils.c \
+	$(SRC_DIR)/builtins/export_env.c \
 	$(SRC_DIR)/builtins/export_print.c \
 	$(SRC_DIR)/builtins/unset.c \
 	$(SRC_DIR)/execution/dispatch.c \

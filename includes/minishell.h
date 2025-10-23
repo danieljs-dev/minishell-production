@@ -6,7 +6,7 @@
 /*   By: dajesus- <dajesus-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 03:58:52 by dajesus-          #+#    #+#             */
-/*   Updated: 2025/10/21 21:01:30 by dajesus-         ###   ########.fr       */
+/*   Updated: 2025/10/23 12:54:28 by dajesus-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,6 +159,8 @@ int						cmp_env_keys_ascii(const char *a, const char *b);
 void					sort_env_ascii(char **arr);
 char					*escape_export_value(const char *value);
 int						env_append(t_shell *shell, char *new_env);
+int						env_has_key(t_shell *shell, const char *name);
+void					env_remove_bare(t_shell *shell, const char *name);
 
 // execution
 int						execute_command(t_command *cmd, t_shell *shell);
